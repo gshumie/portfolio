@@ -13,3 +13,5 @@ This is a responsive portfolio website for Getasew Shumie.
 2. In the repository settings, enable GitHub Pages.
 3. Choose the GitHub Actions deployment source.
 4. The included workflow will publish the site automatically on pushes to the main branch.
+ 
+update
