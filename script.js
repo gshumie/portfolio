@@ -4,9 +4,20 @@ const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 const contactForm = document.getElementById('contactForm');
 const formStatus = document.getElementById('formStatus');
+const submitBtn = document.getElementById('submitBtn');
 const loadingScreen = document.getElementById('loadingScreen');
 const typingText = document.getElementById('typingText');
 const progressBars = document.querySelectorAll('.progress-bar span');
+
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const subjectInput = document.getElementById('subject');
+const messageInput = document.getElementById('message');
+
+const nameError = document.getElementById('nameError');
+const emailError = document.getElementById('emailError');
+const subjectError = document.getElementById('subjectError');
+const messageError = document.getElementById('messageError');
 
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
@@ -60,11 +71,6 @@ const progressObserver = new IntersectionObserver((entries) => {
 progressBars.forEach((bar) => progressObserver.observe(bar));
 
 const typingStrings = [' a web developer.', ' a student creator.', ' a problem solver.'];
-const emailConfig = {
-  publicKey: 'YOUR_PUBLIC_KEY',
-  serviceId: 'YOUR_SERVICE_ID',
-  templateId: 'YOUR_TEMPLATE_ID'
-};
 let typingIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -102,50 +108,190 @@ window.addEventListener('load', () => {
   }, 700);
 });
 
-function setStatus(message, isError = false) {
-  formStatus.textContent = message;
-  formStatus.className = `form-status ${isError ? 'error' : 'success'}`;
+// Resume link graceful missing file check
+const resumeLink = document.getElementById('resumeDownloadBtn') || document.querySelector('a[href*="Getasew_Shumie_CV.pdf"]');
+if (resumeLink) {
+  resumeLink.addEventListener('click', async (event) => {
+    if (window.location.protocol.startsWith('http')) {
+      try {
+        const response = await fetch(resumeLink.href, { method: 'HEAD' });
+        if (response.status === 404) {
+          event.preventDefault();
+          alert('Resume file is temporarily unavailable. Please reach out to getasewshumie@gmail.com to request a copy directly.');
+        }
+      } catch (err) {
+        // Fall back to standard browser download behavior
+      }
+    }
+  });
 }
 
-contactForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+// Contact form validation & email forwarding integration
+function clearErrors() {
+  [nameError, emailError, subjectError, messageError].forEach((el) => {
+    if (el) el.textContent = '';
+  });
+  [nameInput, emailInput, subjectInput, messageInput].forEach((input) => {
+    if (input) input.removeAttribute('aria-invalid');
+  });
+}
 
-  const name = contactForm.elements.name.value.trim();
-  const email = contactForm.elements.email.value.trim();
-  const message = contactForm.elements.message.value.trim();
+function setFieldError(input, errorEl, message) {
+  if (input) input.setAttribute('aria-invalid', 'true');
+  if (errorEl) errorEl.textContent = message;
+}
 
-  if (!name || !email || !message) {
-    setStatus('Please fill in all the fields before sending.', true);
-    return;
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validateForm() {
+  clearErrors();
+  let isValid = true;
+  let firstInvalidInput = null;
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const subject = subjectInput ? subjectInput.value.trim() : '';
+  const message = messageInput ? messageInput.value.trim() : '';
+
+  if (!name || name.length < 2) {
+    setFieldError(nameInput, nameError, 'Please enter your full name (at least 2 characters).');
+    isValid = false;
+    firstInvalidInput = firstInvalidInput || nameInput;
   }
 
-  setStatus('Sending your message...');
+  if (!email) {
+    setFieldError(emailInput, emailError, 'Please enter your email address.');
+    isValid = false;
+    firstInvalidInput = firstInvalidInput || emailInput;
+  } else if (!validateEmail(email)) {
+    setFieldError(emailInput, emailError, 'Please enter a valid email address (e.g. name@example.com).');
+    isValid = false;
+    firstInvalidInput = firstInvalidInput || emailInput;
+  }
 
-  try {
-    const isEmailjsConfigured = window.emailjs &&
-      emailConfig.publicKey !== 'YOUR_PUBLIC_KEY' &&
-      emailConfig.serviceId !== 'YOUR_SERVICE_ID' &&
-      emailConfig.templateId !== 'YOUR_TEMPLATE_ID';
+  if (!subject || subject.length < 3) {
+    setFieldError(subjectInput, subjectError, 'Please provide a subject (at least 3 characters).');
+    isValid = false;
+    firstInvalidInput = firstInvalidInput || subjectInput;
+  }
 
-    if (isEmailjsConfigured) {
-      emailjs.init(emailConfig.publicKey);
-      await emailjs.send(emailConfig.serviceId, emailConfig.templateId, {
-        from_name: name,
-        from_email: email,
-        message: message
-      });
-      setStatus('Thanks! Your message was sent successfully.');
-      contactForm.reset();
+  if (!message || message.length < 10) {
+    setFieldError(messageInput, messageError, 'Please enter a message (at least 10 characters).');
+    isValid = false;
+    firstInvalidInput = firstInvalidInput || messageInput;
+  }
+
+  if (firstInvalidInput) {
+    firstInvalidInput.focus();
+  }
+
+  return isValid;
+}
+
+// Real-time error removal when typing
+[nameInput, emailInput, subjectInput, messageInput].forEach((input) => {
+  if (!input) return;
+  input.addEventListener('input', () => {
+    if (input.getAttribute('aria-invalid') === 'true') {
+      input.removeAttribute('aria-invalid');
+      const errEl = document.getElementById(`${input.id}Error`);
+      if (errEl) errEl.textContent = '';
+      if (formStatus && formStatus.classList.contains('error')) {
+        formStatus.textContent = '';
+        formStatus.className = 'form-status';
+      }
+    }
+  });
+});
+
+function setStatus(message, type = 'info', isHtml = false) {
+  if (!formStatus) return;
+  if (isHtml) {
+    formStatus.innerHTML = message;
+  } else {
+    formStatus.textContent = message;
+  }
+  formStatus.className = `form-status ${type}`;
+}
+
+if (contactForm) {
+  contactForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!validateForm()) {
+      setStatus('Please correct the highlighted fields before submitting.', 'error');
       return;
     }
 
-    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    window.location.href = `mailto:getasewshumie@example.com?subject=${subject}&body=${body}`;
-    setStatus('Your email app has opened with the message prepared.');
-    contactForm.reset();
-  } catch (error) {
-    setStatus('Something went wrong. Please try again later.', true);
-    console.error(error);
-  }
-});
+    const endpoint = contactForm.getAttribute('action');
+    const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+      if (btnText) btnText.textContent = 'Sending...';
+    }
+    setStatus('Sending your message, please wait...', 'info');
+
+    const formData = new FormData(contactForm);
+
+    try {
+      // Check if endpoint is unconfigured placeholder
+      if (!endpoint || endpoint.includes('YOUR_FORM_ID') || endpoint.includes('your_form_id')) {
+        await new Promise((r) => setTimeout(r, 600));
+        const senderName = nameInput.value.trim();
+        setStatus(
+          `Thank you, ${senderName}! Form handler is ready. (To receive live email alerts, configure your active Formspree form ID in index.html). You can also email directly at <a href="mailto:getasewshumie@gmail.com">getasewshumie@gmail.com</a>.`,
+          'success',
+          true
+        );
+        contactForm.reset();
+        clearErrors();
+        return;
+      }
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const senderName = nameInput.value.trim();
+        setStatus(`Thank you, ${senderName}! Your message has been sent successfully. I'll get back to you soon.`, 'success');
+        contactForm.reset();
+        clearErrors();
+      } else {
+        let errorMsg = 'Oops! There was a problem submitting your form.';
+        try {
+          const result = await response.json();
+          if (result && result.errors && Array.isArray(result.errors)) {
+            errorMsg = result.errors.map((e) => e.message).join(', ');
+          } else if (result && result.message) {
+            errorMsg = result.message;
+          }
+        } catch (parseErr) {
+          // ignore JSON parse error
+        }
+        setStatus(`${errorMsg} Please reach out directly at <a href="mailto:getasewshumie@gmail.com">getasewshumie@gmail.com</a>.`, 'error', true);
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus(
+        `Unable to reach the email service. Please check your connection or email directly at <a href="mailto:getasewshumie@gmail.com">getasewshumie@gmail.com</a>.`,
+        'error',
+        true
+      );
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        if (btnText) btnText.textContent = 'Send Message';
+      }
+    }
+  });
+}

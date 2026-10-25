@@ -9,26 +9,27 @@
   <meta name="author" content="Getasew Shumie">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0f172a">
-  <link rel="canonical" href="https://yourdomain.com/">
+  <link rel="canonical" href="https://gshumie.github.io/portfolio/">
   <meta property="og:title" content="Getasew Shumie | Full-Stack Web Developer">
-  <meta property="og:description" content="Portfolio of Getasew Shumie, a full-stack web developer and university student creating polished, responsive web experiences.">
+  <meta property="og:description" content="Portfolio of Getasew Shumie, a full-stack web developer and information technology student creating polished, responsive web experiences.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yourdomain.com/">
-  <meta property="og:image" content="https://yourdomain.com/image/profile.jpg">
+  <meta property="og:url" content="https://gshumie.github.io/portfolio/">
+  <meta property="og:image" content="https://gshumie.github.io/portfolio/image/profile.jpg">
+  <meta property="og:image:alt" content="Portrait of Getasew Shumie">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Getasew Shumie | Full-Stack Web Developer">
-  <meta name="twitter:description" content="Portfolio of Getasew Shumie, a full-stack web developer and university student creating polished, responsive web experiences.">
-  <meta name="twitter:image" content="https://yourdomain.com/image/profile.jpg">
+  <meta name="twitter:description" content="Portfolio of Getasew Shumie, a full-stack web developer and information technology student creating polished, responsive web experiences.">
+  <meta name="twitter:image" content="https://gshumie.github.io/portfolio/image/profile.jpg">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Getasew Shumie",
       "jobTitle": "Full-Stack Web Developer",
-      "url": "https://yourdomain.com/",
+      "url": "https://gshumie.github.io/portfolio/",
       "sameAs": [
-        "https://github.com",
-        "https://www.linkedin.com"
+        "https://github.com/gshumie",
+        "https://www.linkedin.com/in/gshumie"
       ]
     }
   </script>
@@ -71,7 +72,7 @@
           modern JavaScript, and clean frontend architecture.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="files/Getasew_Shumie_CV.pdf" download>Download CV</a>
+          <a class="btn primary" id="resumeDownloadBtn" href="files/Getasew_Shumie_CV.pdf" download="Getasew_Shumie_CV.pdf">Download CV</a>
           <a class="btn secondary" href="#contact">Contact Me</a>
         </div>
       </div>
@@ -121,14 +122,38 @@
         <article class="project-card">
           <h3>Personal Portfolio</h3>
           <p>A modern, responsive portfolio site built with semantic HTML, CSS, and JavaScript.</p>
+          <div class="project-links">
+            <a class="project-link" href="https://gshumie.github.io/portfolio/" target="_blank" rel="noopener noreferrer" aria-label="Open Live Demo for Personal Portfolio">
+              <span aria-hidden="true">↗</span> Live Demo
+            </a>
+            <a class="project-link" href="https://github.com/gshumie/portfolio" target="_blank" rel="noopener noreferrer" aria-label="View Source Code for Personal Portfolio on GitHub">
+              <span aria-hidden="true">💻</span> Source Code (GitHub)
+            </a>
+          </div>
         </article>
         <article class="project-card">
           <h3>Calculator App</h3>
           <p>A lightweight calculator experience with intuitive interactions and a clean UI.</p>
+          <div class="project-links">
+            <a class="project-link" href="https://gshumie.github.io/calculator-app/" target="_blank" rel="noopener noreferrer" aria-label="Open Live Demo for Calculator App">
+              <span aria-hidden="true">↗</span> Live Demo
+            </a>
+            <a class="project-link" href="https://github.com/gshumie/calculator-app" target="_blank" rel="noopener noreferrer" aria-label="View Source Code for Calculator App on GitHub">
+              <span aria-hidden="true">💻</span> Source Code (GitHub)
+            </a>
+          </div>
         </article>
         <article class="project-card">
           <h3>To-Do List</h3>
           <p>A task manager that keeps everyday priorities organized in a simple interface.</p>
+          <div class="project-links">
+            <a class="project-link" href="https://gshumie.github.io/todo-list/" target="_blank" rel="noopener noreferrer" aria-label="Open Live Demo for To-Do List">
+              <span aria-hidden="true">↗</span> Live Demo
+            </a>
+            <a class="project-link" href="https://github.com/gshumie/todo-list" target="_blank" rel="noopener noreferrer" aria-label="View Source Code for To-Do List on GitHub">
+              <span aria-hidden="true">💻</span> Source Code (GitHub)
+            </a>
+          </div>
         </article>
       </div>
     </section>
@@ -158,15 +183,43 @@
       </p>
       <div class="contact-wrapper">
         <div class="contact-info">
-          <a href="mailto:getasewshumie@example.com">getasewshumie@example.com</a>
-          <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+          <h3>Contact Details</h3>
+          <p>Connect with me directly via email or check out my profiles below:</p>
+          <a class="contact-link" href="mailto:getasewshumie@gmail.com">
+            <span aria-hidden="true">✉</span> getasewshumie@gmail.com
+          </a>
+          <a class="contact-link" href="https://github.com/gshumie" target="_blank" rel="noopener noreferrer">
+            <span aria-hidden="true">🐙</span> GitHub (gshumie)
+          </a>
+          <a class="contact-link" href="https://www.linkedin.com/in/gshumie" target="_blank" rel="noopener noreferrer">
+            <span aria-hidden="true">💼</span> LinkedIn
+          </a>
         </div>
-        <form id="contactForm" class="contact-form">
-          <input type="text" name="name" placeholder="Your name" required>
-          <input type="email" name="email" placeholder="Your email" required>
-          <textarea name="message" rows="5" placeholder="Tell me about your idea" required></textarea>
-          <button type="submit">Send Message</button>
+        <form id="contactForm" class="contact-form" action="https://formspree.io/f/xdeeaavo" method="POST" novalidate>
+          <div class="form-group">
+            <label for="name">Full Name <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" id="name" name="name" placeholder="Getasew Shumie" required autocomplete="name" aria-required="true">
+            <span class="field-error" id="nameError" aria-live="polite"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address <span class="required" aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" placeholder="name@example.com" required autocomplete="email" aria-required="true">
+            <span class="field-error" id="emailError" aria-live="polite"></span>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" id="subject" name="subject" placeholder="Project Inquiry / Collaboration" required aria-required="true">
+            <span class="field-error" id="subjectError" aria-live="polite"></span>
+          </div>
+          <div class="form-group">
+            <label for="message">Message <span class="required" aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project, timeline, or idea..." required aria-required="true"></textarea>
+            <span class="field-error" id="messageError" aria-live="polite"></span>
+          </div>
+          <button type="submit" id="submitBtn" class="btn primary submit-btn">
+            <span class="btn-text">Send Message</span>
+            <span class="btn-loader" aria-hidden="true"></span>
+          </button>
           <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -181,7 +234,6 @@
     </div>
   </footer>
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
