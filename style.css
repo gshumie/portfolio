@@ -581,9 +581,12 @@ body[data-theme="light"] .project-link:focus-visible {
 @media (max-width: 900px) {
   .hero,
   .contact-wrapper,
-  .project-grid,
   .certificate-grid {
     grid-template-columns: 1fr;
+  }
+
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .skill-grid {
@@ -592,6 +595,9 @@ body[data-theme="light"] .project-link:focus-visible {
 }
 
 @media (max-width: 640px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
   .menu-toggle {
     display: flex;
   }
